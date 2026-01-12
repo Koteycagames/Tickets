@@ -2,148 +2,175 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Roblox Clone HTML</title>
+    <title>GameZone - Tickets & Games</title>
     <style>
         :root {
-            --bg-color: #1e1e1e;
-            --card-color: #2b2b2b;
-            --text-color: #ffffff;
-            --accent: #00b06f; /* Роблокс зеленый */
-            --danger: #d93f3f;
+            --bg: #181818;
+            --panel: #242424;
+            --text: #ffffff;
+            --green: #2ecc71;
+            --yellow: #f1c40f;
+            --red: #e74c3c;
+            --blue: #3498db;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        /* --- ШАПКА --- */
+        /* ШАПКА */
         header {
-            background-color: #232323;
-            padding: 10px 20px;
+            background-color: var(--panel);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #333;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        .logo { font-size: 24px; font-weight: bold; }
-
-        .user-info {
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: var(--blue); }
+        
+        .profile-section {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             cursor: pointer;
-            background: #333;
+            background: #2a2a2a;
             padding: 5px 15px;
-            border-radius: 20px;
+            border-radius: 50px;
             transition: 0.2s;
         }
-        .user-info:hover { background: #444; }
+        .profile-section:hover { background: #333; }
 
-        .balance { font-weight: bold; color: var(--accent); }
+        .balance-box { 
+            font-weight: bold; 
+            color: var(--yellow); 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+        }
 
-        /* Аватарка с буквой */
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background-color: orange;
+        /* АВАТАРКА БУКВОЙ */
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background: var(--blue);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 20px;
             font-weight: bold;
-            font-size: 18px;
             color: white;
             text-transform: uppercase;
         }
 
-        /* --- ГЛАВНОЕ МЕНЮ --- */
-        .main-container { padding: 20px; flex: 1; }
-        
-        .top-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-        
-        .btn {
-            padding: 10px 20px;
-            background-color: var(--card-color);
-            border: 1px solid #444;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+        /* МЕНЮ */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
         }
-        .btn:hover { background-color: #3a3a3a; }
-        .btn-green { background-color: var(--accent); border: none; }
-        .btn-green:hover { background-color: #00915b; }
 
-        /* --- СЕТКА ИГР --- */
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+        .btn-reward { background: linear-gradient(45deg, #e67e22, #f1c40f); color: #000; }
+        .btn-game { background: var(--panel); color: white; border: 1px solid #444; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-danger { background: var(--red); color: white; }
+
+        /* СПИСОК ИГР */
+        h2 { border-left: 5px solid var(--blue); padding-left: 10px; margin-bottom: 20px; }
+
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
         }
 
         .game-card {
-            background-color: var(--card-color);
-            border-radius: 10px;
+            background: var(--panel);
+            border-radius: 12px;
             overflow: hidden;
-            cursor: pointer;
             transition: transform 0.2s;
+            cursor: pointer;
+            position: relative;
         }
-        .game-card:hover { transform: translateY(-5px); }
-        .game-img { width: 100%; height: 100px; background-color: #555; display: flex; align-items: center; justify-content: center; color: #888; }
-        .game-title { padding: 10px; font-weight: bold; font-size: 14px; }
-        .game-online { padding: 0 10px 10px; font-size: 12px; color: #aaa; }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .game-thumb { height: 120px; background: #444; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .game-info { padding: 15px; }
+        .game-title { font-weight: bold; margin-bottom: 5px; display: block; }
+        .play-btn { 
+            margin-top: 10px; 
+            width: 100%; 
+            background: var(--green); 
+            color: white; 
+            padding: 8px; 
+            border-radius: 5px; 
+            text-align: center;
+            display: block;
+        }
 
-        /* --- МОДАЛЬНЫЕ ОКНА --- */
-        .modal {
+        /* МОДАЛЬНЫЕ ОКНА */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
             display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
-        .modal-content {
-            background: var(--card-color);
-            padding: 20px;
-            border-radius: 12px;
-            width: 400px;
-            max-width: 90%;
+        .modal-window {
+            background: var(--panel);
+            width: 450px;
+            padding: 25px;
+            border-radius: 15px;
             position: relative;
             text-align: center;
-            max-height: 80vh;
+            border: 1px solid #444;
+            max-height: 90vh;
             overflow-y: auto;
         }
-        .close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 20px; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888; }
         
-        /* Стили для наград */
-        .reward-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #222;
-            margin: 5px 0;
+        input {
+            width: 80%;
             padding: 10px;
+            margin: 10px 0;
+            background: #111;
+            border: 1px solid #444;
+            color: white;
             border-radius: 5px;
         }
-        .timer-display { font-size: 12px; color: #888; }
 
-        /* --- МОНЕТКА (3D) --- */
-        .coin-container {
-            width: 100px;
-            height: 100px;
-            margin: 20px auto;
-            position: relative;
+        /* 3D МОНЕТКА */
+        .coin-scene {
+            width: 150px;
+            height: 150px;
+            margin: 30px auto;
             perspective: 1000px;
         }
         .coin {
@@ -151,332 +178,399 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 3s ease-out;
+            transition: transform 3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .coin-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
             border-radius: 50%;
+            backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 20px;
-            border: 5px solid #d4af37;
+            font-size: 40px;
+            border: 8px solid #d4af37;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
-        .heads { background-color: #fdd835; color: #333; transform: rotateY(0deg); }
-        .tails { background-color: #c0c0c0; color: #333; transform: rotateY(180deg); }
+        .face-front { background: #f1c40f; transform: rotateY(0deg); color: #9e8206; }
+        .face-back { background: #bdc3c7; transform: rotateY(180deg); color: #7f8c8d; border-color: #95a5a6; }
 
-        input {
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #555;
-            background: #222;
-            color: white;
-            width: 70%;
-            margin-bottom: 10px;
+        /* СПИСОК НАГРАД */
+        .reward-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a1a;
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        .reward-info { font-size: 14px; }
+        .reward-timer { font-size: 12px; color: #777; }
+
+        /* ОКНО ИГРЫ */
+        .game-frame {
+            width: 100%;
+            height: 300px;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            flex-direction: column;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">RobloxClone</div>
-        <div class="user-info" onclick="openProfile()">
-            <span class="balance" id="balanceDisplay">15 Tickets</span>
-            <div class="avatar" id="avatarDisplay">?</div>
+        <div class="logo">MiniGames<span style="color:var(--yellow)">Hub</span></div>
+        
+        <div class="profile-section" onclick="openModal('modalProfile')">
+            <div class="balance-box">
+                <span id="balanceDisplay">15</span> 🎟️
+            </div>
+            <div class="avatar-circle" id="headerAvatar">?</div>
         </div>
     </header>
 
-    <div class="main-container">
-        <div class="top-bar">
-            <button class="btn btn-green" onclick="openRewards()">🎁 Награды за время <span id="mainTimer">00:00</span></button>
-            <button class="btn" onclick="openCoinGame()">🪙 Кинуть монетку</button>
+    <div class="main-content">
+        <div class="action-bar">
+            <button class="btn-reward" onclick="openModal('modalRewards')">
+                ⏳ Награды за время (<span id="globalTimer">00:00</span>)
+            </button>
+            <button class="btn-game" onclick="openModal('modalCoin')">
+                🪙 Подбросить монетку
+            </button>
         </div>
 
-        <h2>Игры</h2>
-        <div class="games-grid" id="gamesList">
+        <h2>Каталог игр</h2>
+        <div class="games-grid" id="gamesContainer">
             </div>
     </div>
 
-    <div id="modalProfile" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalProfile')">&times;</span>
-            <h2>Профиль</h2>
-            <div class="avatar" id="modalAvatar" style="width:80px; height:80px; font-size:40px; margin: 0 auto 10px;">?</div>
-            <p id="emailDisplay">user@mail.com</p>
-            <hr style="border-color: #444;">
-            <h3>Отправить тикеты</h3>
-            <input type="text" id="transferName" placeholder="Никнейм игрока">
-            <input type="number" id="transferAmount" placeholder="Количество">
-            <button class="btn btn-green" onclick="transferTickets()">Отправить</button>
+    <div class="modal-overlay" id="modalProfile">
+        <div class="modal-window">
+            <span class="close-btn" onclick="closeModal('modalProfile')">&times;</span>
+            <h2>Мой Профиль</h2>
+            <div class="avatar-circle" id="profileAvatar" style="width:80px; height:80px; font-size:40px; margin: 0 auto 15px;">?</div>
+            <p id="profileEmail" style="color: #888; margin-bottom: 20px;">email@example.com</p>
+            
+            <div style="background: #111; padding: 15px; border-radius: 10px; text-align: left;">
+                <h3 style="margin-top:0">Перевод Тикетов</h3>
+                <input type="text" id="transferNick" placeholder="Никнейм игрока">
+                <input type="number" id="transferAmount" placeholder="Количество">
+                <button class="btn-green" style="width:100%" onclick="transferMoney()">Отправить ➡</button>
+            </div>
         </div>
     </div>
 
-    <div id="modalRewards" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalRewards')">&times;</span>
-            <h2>Награды за онлайн</h2>
-            <p>Ты в игре: <span id="rewardsTimer">00:00</span></p>
-            <div id="rewardsList"></div>
+    <div class="modal-overlay" id="modalRewards">
+        <div class="modal-window">
+            <span class="close-btn" onclick="closeModal('modalRewards')">&times;</span>
+            <h2>Ежедневные Награды</h2>
+            <p style="color:#888">Ты онлайн: <span id="rewardsTimerDisplay">00:00</span></p>
+            <div id="rewardsListContainer">
+                </div>
         </div>
     </div>
 
-    <div id="modalCoin" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalCoin')">&times;</span>
+    <div class="modal-overlay" id="modalCoin">
+        <div class="modal-window">
+            <span class="close-btn" onclick="closeModal('modalCoin')">&times;</span>
             <h2>Орел или Решка</h2>
             
-            <div class="coin-container">
-                <div class="coin" id="coin">
-                    <div class="coin-face heads">O</div>
-                    <div class="coin-face tails">P</div>
+            <div class="coin-scene">
+                <div class="coin" id="coinObj">
+                    <div class="coin-face face-front">O</div>
+                    <div class="coin-face face-back">P</div>
                 </div>
             </div>
 
-            <p id="coinResult">Сделай ставку!</p>
-            <p style="font-size: 12px; color: yellow;">Бесплатные кидки: <span id="freeFlipsCount">0</span></p>
+            <p id="coinStatus" style="font-weight:bold; font-size: 18px;">Сделай ставку!</p>
             
-            <input type="number" id="betAmount" placeholder="Ставка (Tickets)" value="5">
-            <br>
-            <button class="btn" onclick="flipCoin('heads')">Орел (Heads)</button>
-            <button class="btn" onclick="flipCoin('tails')">Решка (Tails)</button>
+            <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:15px;">
+                <span style="color:var(--yellow)">Бесплатные кидки: <b id="freeFlipsDisplay">0</b></span>
+            </div>
+
+            <input type="number" id="betInput" placeholder="Ставка (Tickets)" value="5">
+            
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn-game" style="flex:1; background:#f1c40f; color:#000;" onclick="playCoin('heads')">ОРЕЛ</button>
+                <button class="btn-game" style="flex:1; background:#95a5a6; color:#000;" onclick="playCoin('tails')">РЕШКА</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalGameWindow">
+        <div class="modal-window" style="width: 800px; height: 600px;">
+            <span class="close-btn" onclick="closeModal('modalGameWindow'); stopGameSession();">&times;</span>
+            <h2 id="activeGameTitle">Game Title</h2>
+            <div class="game-frame" id="gameFrame">
+                <div id="gameLoader">Загрузка игры...</div>
+            </div>
+            <p>Вы играете. Время игры засчитывается в награды.</p>
+            <button class="btn-danger" onclick="closeModal('modalGameWindow')">Выйти из игры</button>
         </div>
     </div>
 
     <script>
-        // --- ДАННЫЕ ИГРОКА ---
-        // Если пользователь новый, даем 15 тикетов. Иначе берем из сохранения.
-        let userData = JSON.parse(localStorage.getItem('robloxUser')) || {
-            email: "krutoy_chel@gmail.com", // Пример почты
-            tickets: 15,
+        /* --- ДАННЫЕ ПОЛЬЗОВАТЕЛЯ --- */
+        let user = JSON.parse(localStorage.getItem('siteUser')) || {
+            email: "admin@gmail.com", // Пример почты
+            tickets: 15, // СТАРТ: 15 ТИКЕТОВ
+            playTime: 0,
             freeFlips: 0,
-            playTime: 0, // В секундах
-            claimedRewards: [] // ID полученных наград
+            claimed: []
         };
 
-        // --- НАСТРОЙКИ НАГРАД ---
-        const rewardsConfig = [
-            { id: 1, time: 60, type: 'tickets', amount: 3, label: "1 минута: 3 Tickets" },
-            { id: 2, time: 300, type: 'tickets', amount: 5, label: "5 минут: 5 Tickets" },
-            { id: 3, time: 600, type: 'flips', amount: 3, label: "10 минут: 3 Бесплатных кидка" },
-            { id: 4, time: 900, type: 'tickets', amount: 8, label: "15 минут: 8 Tickets" },
-            { id: 5, time: 1200, type: 'flips', amount: 1, label: "20 минут: 1 Бесплатный кидок" },
-            { id: 6, time: 1800, type: 'tickets', amount: 10, label: "30 минут: 10 Tickets" },
-            { id: 7, time: 3600, type: 'flips', amount: 10, label: "60 минут: 10 Бесплатных кидков" }
+        // Конфиг наград (Твой список)
+        const rewardsDB = [
+            { m: 1,  type: 'T', val: 3,  desc: "1 минута: 3 Tickets" },
+            { m: 5,  type: 'T', val: 5,  desc: "5 минут: 5 Tickets" },
+            { m: 10, type: 'F', val: 3,  desc: "10 минут: 3 Free Flips" },
+            { m: 15, type: 'T', val: 8,  desc: "15 минут: 8 Tickets" },
+            { m: 20, type: 'F', val: 1,  desc: "20 минут: 1 Free Flip" },
+            { m: 30, type: 'T', val: 10, desc: "30 минут: 10 Tickets" },
+            { m: 60, type: 'F', val: 10, desc: "60 минут: 10 Free Flips" }
         ];
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
-        function init() {
-            updateUI();
+        /* --- ИНИЦИАЛИЗАЦИЯ --- */
+        window.onload = function() {
+            setupProfile();
+            updateBalanceUI();
             renderGames();
-            renderRewards();
+            renderRewardsUI();
             
-            // Запускаем таймер
+            // Таймер (тикает каждую секунду)
             setInterval(() => {
-                userData.playTime++;
-                saveData();
-                updateTimerUI();
-                renderRewards(); // Обновляем кнопки
+                user.playTime++;
+                save();
+                updateTimerDisplay();
+                checkRewardUnlock(); 
             }, 1000);
-        }
+        };
 
-        // --- ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
-        function updateUI() {
-            // Баланс
-            document.getElementById('balanceDisplay').innerText = userData.tickets + " Tickets";
+        function save() { localStorage.setItem('siteUser', JSON.stringify(user)); }
+
+        function setupProfile() {
+            // Аватарка: Первая буква почты
+            const letter = user.email.charAt(0).toUpperCase();
             
-            // Аватарка (первая буква)
-            const letter = userData.email.charAt(0).toUpperCase();
-            document.getElementById('avatarDisplay').innerText = letter;
-            document.getElementById('modalAvatar').innerText = letter;
-            document.getElementById('emailDisplay').innerText = userData.email;
+            // Генерация цвета по букве
+            const hue = letter.charCodeAt(0) * 45; 
+            const color = `hsl(${hue}, 70%, 50%)`;
 
-            // Цвет аватарки (рандом на основе буквы для прикола)
-            const colors = ['#e74c3c', '#8e44ad', '#3498db', '#16a085', '#f39c12'];
-            const colorIndex = letter.charCodeAt(0) % colors.length;
-            document.getElementById('avatarDisplay').style.backgroundColor = colors[colorIndex];
-            document.getElementById('modalAvatar').style.backgroundColor = colors[colorIndex];
+            document.getElementById('headerAvatar').innerText = letter;
+            document.getElementById('headerAvatar').style.background = color;
             
-            document.getElementById('freeFlipsCount').innerText = userData.freeFlips;
+            document.getElementById('profileAvatar').innerText = letter;
+            document.getElementById('profileAvatar').style.background = color;
+            document.getElementById('profileEmail').innerText = user.email;
         }
 
-        function updateTimerUI() {
-            const min = Math.floor(userData.playTime / 60);
-            const sec = userData.playTime % 60;
-            const timeStr = `${min}:${sec < 10 ? '0'+sec : sec}`;
-            document.getElementById('mainTimer').innerText = timeStr;
-            document.getElementById('rewardsTimer').innerText = timeStr;
+        function updateBalanceUI() {
+            document.getElementById('balanceDisplay').innerText = user.tickets;
+            document.getElementById('freeFlipsDisplay').innerText = user.freeFlips;
         }
 
-        function saveData() {
-            localStorage.setItem('robloxUser', JSON.stringify(userData));
+        function updateTimerDisplay() {
+            const m = Math.floor(user.playTime / 60);
+            const s = user.playTime % 60;
+            const str = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+            document.getElementById('globalTimer').innerText = str;
+            document.getElementById('rewardsTimerDisplay').innerText = str;
         }
 
-        // --- ЛОГИКА НАГРАД ---
-        function renderRewards() {
-            const container = document.getElementById('rewardsList');
-            container.innerHTML = "";
+        /* --- ЛОГИКА НАГРАД --- */
+        function renderRewardsUI() {
+            const list = document.getElementById('rewardsListContainer');
+            list.innerHTML = "";
 
-            rewardsConfig.forEach(reward => {
-                const isClaimed = userData.claimedRewards.includes(reward.id);
-                const canClaim = userData.playTime >= reward.time;
+            rewardsDB.forEach((r, index) => {
+                const row = document.createElement('div');
+                row.className = "reward-row";
                 
-                const div = document.createElement('div');
-                div.className = 'reward-item';
-                
-                let btnHtml = '';
-                if (isClaimed) {
-                    btnHtml = `<button class="btn" disabled style="opacity:0.5">Получено</button>`;
-                } else if (canClaim) {
-                    btnHtml = `<button class="btn btn-green" onclick="claimReward(${reward.id})">Забрать</button>`;
+                const isClaimed = user.claimed.includes(index);
+                const isUnlocked = user.playTime >= r.m * 60;
+
+                let btnHTML;
+                if(isClaimed) {
+                    btnHTML = `<span style="color:#555">✔ Получено</span>`;
+                } else if(isUnlocked) {
+                    btnHTML = `<button class="btn-green" style="padding:5px 10px; font-size:12px;" onclick="claim(${index})">Забрать</button>`;
                 } else {
-                    const timeLeft = reward.time - userData.playTime;
-                    btnHtml = `<span class="timer-display">через ${Math.ceil(timeLeft/60)} мин</span>`;
+                    const left = (r.m * 60) - user.playTime;
+                    btnHTML = `<span class="reward-timer">через ${Math.ceil(left/60)} мин</span>`;
                 }
 
-                div.innerHTML = `<span>${reward.label}</span> ${btnHtml}`;
-                container.appendChild(div);
+                row.innerHTML = `
+                    <div class="reward-info">${r.desc}</div>
+                    <div>${btnHTML}</div>
+                `;
+                list.appendChild(row);
             });
         }
 
-        function claimReward(id) {
-            const reward = rewardsConfig.find(r => r.id === id);
-            if (!reward) return;
-
-            if (reward.type === 'tickets') {
-                userData.tickets += reward.amount;
-                alert(`Ты получил +${reward.amount} Tickets!`);
-            } else if (reward.type === 'flips') {
-                userData.freeFlips += reward.amount;
-                alert(`Ты получил +${reward.amount} бесплатных кидков!`);
+        function checkRewardUnlock() {
+            // Просто обновляем UI если открыто окно наград
+            if(document.getElementById('modalRewards').style.display === 'flex') {
+                renderRewardsUI();
             }
-
-            userData.claimedRewards.push(id);
-            saveData();
-            updateUI();
-            renderRewards();
         }
 
-        // --- ЛОГИКА ПЕРЕВОДА ---
-        function transferTickets() {
-            const name = document.getElementById('transferName').value;
+        function claim(index) {
+            const r = rewardsDB[index];
+            if(r.type === 'T') {
+                user.tickets += r.val;
+                alert(`+${r.val} Tickets!`);
+            } else {
+                user.freeFlips += r.val;
+                alert(`+${r.val} Free Flips!`);
+            }
+            user.claimed.push(index);
+            save();
+            updateBalanceUI();
+            renderRewardsUI();
+        }
+
+        /* --- ЛОГИКА ПЕРЕВОДА --- */
+        function transferMoney() {
+            const nick = document.getElementById('transferNick').value;
             const amount = parseInt(document.getElementById('transferAmount').value);
 
-            if (!name) { alert("Введи имя друга!"); return; }
-            if (isNaN(amount) || amount <= 0) { alert("Введи нормальную сумму!"); return; }
-            if (amount > userData.tickets) { alert("У тебя нет столько тикетов!"); return; }
+            if(!nick) return alert("Введите ник!");
+            if(isNaN(amount) || amount <= 0) return alert("Неверная сумма");
+            if(user.tickets < amount) return alert("Недостаточно тикетов!");
 
-            userData.tickets -= amount;
-            alert(`Успешно отправлено ${amount} Tickets игроку ${name}!`);
-            
-            saveData();
-            updateUI();
+            user.tickets -= amount;
+            save();
+            updateBalanceUI();
+            alert(`Успешно отправлено ${amount} тикетов игроку ${nick}`);
             closeModal('modalProfile');
         }
 
-        // --- ЛОГИКА МОНЕТКИ (3D + СТАВКИ) ---
-        function flipCoin(choice) {
-            const betInput = document.getElementById('betAmount');
-            let bet = parseInt(betInput.value);
-            let useFreeFlip = false;
+        /* --- ЛОГИКА МОНЕТКИ (3D) --- */
+        let isFlipping = false;
 
-            // Проверка бесплатных кидков
-            if (userData.freeFlips > 0) {
-                if (confirm(`Использовать бесплатный кидок? (Осталось: ${userData.freeFlips})`)) {
-                    useFreeFlip = true;
-                    bet = 0; // При бесплатном кидке мы не тратим свои, но выигрываем фиксированную награду (например 5)
+        function playCoin(choice) {
+            if(isFlipping) return;
+
+            const betInput = document.getElementById('betInput');
+            let bet = parseInt(betInput.value);
+            let useFree = false;
+
+            // Логика оплаты
+            if(user.freeFlips > 0) {
+                if(confirm(`Использовать бесплатный кидок? (Осталось: ${user.freeFlips})`)) {
+                    useFree = true;
+                    bet = 0;
                 }
             }
 
-            if (!useFreeFlip) {
-                if (isNaN(bet) || bet <= 0) { alert("Сделай ставку!"); return; }
-                if (bet > userData.tickets) { alert("Не хватает тикетов!"); return; }
-                userData.tickets -= bet; // Снимаем ставку сразу
+            if(!useFree) {
+                if(isNaN(bet) || bet <= 0) return alert("Ставка должна быть больше 0");
+                if(user.tickets < bet) return alert("Мало тикетов!");
+                user.tickets -= bet;
             } else {
-                userData.freeFlips--; // Снимаем бесплатный кидок
+                user.freeFlips--;
             }
-            
-            updateUI();
 
-            const coin = document.getElementById('coin');
-            const resultDisplay = document.getElementById('coinResult');
-            resultDisplay.innerText = "Подбрасываем...";
-            
-            // Случайный результат: 1 = Tails (Решка), 0 = Heads (Орел)
-            // Мы сделаем много оборотов + результат
-            const isHeads = Math.random() < 0.5;
+            updateBalanceUI();
+            isFlipping = true;
+            document.getElementById('coinStatus').innerText = "Монетка летит...";
+
+            // Рандом
+            const isHeads = Math.random() < 0.5; // true = Орел
             const resultSide = isHeads ? 'heads' : 'tails';
-            
-            // Сбрасываем анимацию
-            coin.style.transition = 'none';
-            coin.style.transform = 'rotateY(0deg)';
-            
+
+            // Анимация
+            const coinObj = document.getElementById('coinObj');
+            coinObj.style.transition = "none";
+            coinObj.style.transform = "rotateY(0deg)";
+
             setTimeout(() => {
-                coin.style.transition = 'transform 3s ease-out';
-                // Вращаем 5 полных оборотов (1800deg) + результат
-                // Heads = 0 или 360, Tails = 180
-                const rotate = 1800 + (isHeads ? 0 : 180); 
-                coin.style.transform = `rotateY(${rotate}deg)`;
+                coinObj.style.transition = "transform 3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                // Вращаем сильно (1800deg = 5 оборотов) + нужная грань
+                // Орел = 0/360, Решка = 180
+                const rotate = 1800 + (isHeads ? 0 : 180);
+                coinObj.style.transform = `rotateY(${rotate}deg)`;
             }, 50);
 
             setTimeout(() => {
-                // Проверка победы
+                // Результат
                 const win = (choice === resultSide);
                 
-                if (win) {
-                    let winAmount = 0;
-                    if (useFreeFlip) {
-                        winAmount = 5; // Фикс награда за бесплатный флип
-                        resultDisplay.innerText = `Выпало ${resultSide.toUpperCase()}! Ты выиграл 5 Tickets (Бесплатно)!`;
-                    } else {
-                        winAmount = bet * 2;
-                        resultDisplay.innerText = `Выпало ${resultSide.toUpperCase()}! Ты выиграл ${winAmount} Tickets!`;
-                    }
-                    userData.tickets += winAmount;
+                if(win) {
+                    let winSum = useFree ? 5 : bet * 2; // Если бесплатно - приз 5, иначе х2
+                    user.tickets += winSum;
+                    document.getElementById('coinStatus').innerHTML = `<span style="color:var(--green)">ПОБЕДА! +${winSum}</span>`;
                 } else {
-                    resultDisplay.innerText = `Выпало ${resultSide.toUpperCase()}. Ты проиграл :(`;
+                    document.getElementById('coinStatus').innerHTML = `<span style="color:var(--red)">ПРОИГРЫШ</span>`;
                 }
-                saveData();
-                updateUI();
-            }, 3000); // Ждем 3 сек пока анимация кончится
+                
+                save();
+                updateBalanceUI();
+                isFlipping = false;
+            }, 3050);
         }
 
-        // --- ГЕНЕРАЦИЯ ИГР ---
+        /* --- ИГРЫ --- */
         function renderGames() {
             const games = [
-                { name: "Mega Easy Obby", online: "12.4k", color: "#f1c40f" },
-                { name: "Tycoon Simulator", online: "5.1k", color: "#e67e22" },
-                { name: "Pet Ranch", online: "8.9k", color: "#9b59b6" },
-                { name: "City Life", online: "25k", color: "#3498db" },
-                { name: "Zombie Attack", online: "3.2k", color: "#e74c3c" }
+                { name: "Parkour Tower", img: "🏃‍♂️" },
+                { name: "Pixel Shooter", img: "🔫" },
+                { name: "Speed Race", img: "🏎️" },
+                { name: "Build Tycoon", img: "🏗️" },
+                { name: "Space Sim", img: "🚀" }
             ];
 
-            const container = document.getElementById('gamesList');
+            const cont = document.getElementById('gamesContainer');
             games.forEach(g => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => alert(`Заходим в ${g.name}...`);
-                card.innerHTML = `
-                    <div class="game-img" style="background:${g.color}">Картинка</div>
-                    <div class="game-title">${g.name}</div>
-                    <div class="game-online">🟢 ${g.online} Playing</div>
+                const el = document.createElement('div');
+                el.className = 'game-card';
+                el.onclick = () => openGame(g.name, g.img);
+                el.innerHTML = `
+                    <div class="game-thumb" style="background:${getRandomColor()}">${g.img}</div>
+                    <div class="game-info">
+                        <span class="game-title">${g.name}</span>
+                        <span style="font-size:12px; color:#777">👥 ${Math.floor(Math.random()*5000)} playing</span>
+                    </div>
                 `;
-                container.appendChild(card);
+                cont.appendChild(el);
             });
         }
 
-        // --- УПРАВЛЕНИЕ ОКНАМИ ---
-        function openProfile() { document.getElementById('modalProfile').style.display = 'flex'; }
-        function openRewards() { document.getElementById('modalRewards').style.display = 'flex'; }
-        function openCoinGame() { document.getElementById('modalCoin').style.display = 'flex'; }
+        function openGame(title, icon) {
+            document.getElementById('activeGameTitle').innerText = title;
+            document.getElementById('gameLoader').innerHTML = `
+                <div style="font-size:50px">${icon}</div>
+                <br>Запуск игры...<br>
+                <small>Связь с сервером...</small>
+            `;
+            openModal('modalGameWindow');
+        }
+        
+        function stopGameSession() {
+            // Тут можно добавить логику сохранения прогресса игры
+        }
+
+        function getRandomColor() {
+            const c = ['#c0392b', '#8e44ad', '#2980b9', '#16a085', '#d35400'];
+            return c[Math.floor(Math.random() * c.length)];
+        }
+
+        /* --- ХЕЛПЕРЫ МОДАЛОК --- */
+        function openModal(id) { 
+            document.getElementById(id).style.display = 'flex'; 
+            if(id === 'modalRewards') renderRewardsUI();
+        }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // Запуск
-        init();
-
     </script>
 </body>
 </html>
