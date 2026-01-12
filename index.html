@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits Mini-Games</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --bg: #1e1e2e;
+            --surface: #2d2d44;
+            --text: #ffffff;
+            --danger: #ff7675;
+            --success: #55efc4;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Экраны */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Элементы UI */
+        input {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            width: 80%;
+            max-width: 300px;
+            background: var(--surface);
+            color: white;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 80%;
+            max-width: 300px;
+            position: relative; /* Для спиннера */
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        /* Заголовок с профилем */
+        #header {
+            display: none; /* Скрыт на экране входа */
+            width: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+            background: var(--surface);
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-btn-icon {
+            background: #444;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Модальное окно профиля */
+        #profile-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 350px;
+            text-align: left;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .stat-row {
+            margin: 15px 0;
+            font-size: 18px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* Игры */
+        .game-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .game-card:hover {
+            border-color: var(--primary);
+        }
+
+        .coin {
+            width: 100px;
+            height: 100px;
+            background: #ffd700;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #b8860b;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Реклама */
+        #ad-container {
+            margin-top: auto;
+            background: #000;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 5px 0;
+            min-height: 90px;
+        }
+
+        /* Лоадер (кружочек) */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* Скрыт по умолчанию */
+        }
+        
+        .btn-text.hidden {
+            visibility: hidden;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        #result-msg {
+            height: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <div class="profile-btn-icon" onclick="openProfile()">👤</div>
+        <div style="font-weight: bold;">Баланс: <span id="header-balance">...</span> T</div>
+    </div>
+
+    <div id="auth-screen" class="screen active">
+        <h1>Вход в систему</h1>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="handleLogin()" id="login-btn">
+            <span class="btn-text">Войти</span>
+            <div class="loader"></div>
+        </button>
+        <button onclick="handleRegister()" style="background: var(--surface);">
+            <span class="btn-text">Регистрация</span>
+            <div class="loader"></div>
+        </button>
+        <p id="auth-error" style="color: var(--danger); font-size: 14px;"></p>
+    </div>
+
+    <div id="menu-screen" class="screen">
+        <h2>Мини-Игры</h2>
+        <div class="game-card" onclick="openGame('coinflip')">
+            <h3>🪙 Монетка</h3>
+            <p>Риск: 3 Тикета</p>
+            <p>Награда: 5 Тикетов</p>
+        </div>
+        </div>
+
+    <div id="coinflip-screen" class="screen">
+        <button onclick="showScreen('menu-screen')" style="background: transparent; width: auto; position: absolute; top: 60px; left: 10px;">⬅ Назад</button>
+        <h2>Орел или Решка?</h2>
+        <div class="coin" id="coin-visual">$</div>
+        <p>Стоимость игры: <b>3 Тикета</b></p>
+        <p>Выигрыш: <b>5 Тикетов</b></p>
+        <div id="result-msg"></div>
+        
+        <button onclick="playCoinFlip()" id="play-btn">
+            <span class="btn-text">ОПЛАТИТЬ И ИГРАТЬ</span>
+            <div class="loader"></div>
+        </button>
+    </div>
+
+    <div id="profile-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeProfile()">&times;</span>
+            <h2>Профиль Игрока</h2>
+            
+            <div class="stat-row">
+                <div class="stat-label">Standoff ID</div>
+                <b id="profile-id">Загрузка...</b>
+            </div>
+            
+            <div class="stat-row">
+                <div class="stat-label">Email</div>
+                <span id="profile-email">...</span>
+            </div>
+
+            <div class="stat-row">
+                <div class="stat-label">Баланс</div>
+                <span id="profile-balance" style="color: var(--success)">...</span> Тикетов
+            </div>
+
+            <button onclick="handleLogout()" style="width: 100%; background: var(--danger); margin: 20px 0 0 0;">Выйти</button>
+        </div>
+    </div>
+
+    <div id="ad-container">
+        <script>
+            atOptions = {
+              'key' : 'ba5b233760526a810caa77cf17293467',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://avenuenineteenthendorsement.com/ba5b233760526a810caa77cf17293467/invoke.js"></script>
+    </div>
+
+    <script type="module">
+        // Импорт Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, runTransaction, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+        // Конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyDvKy3Ij9zeHOl2lwyrCAuDd-60pLZhQUc",
+            authDomain: "credits-f2ca3.firebaseapp.com",
+            databaseURL: "https://credits-f2ca3-default-rtdb.firebaseio.com",
+            projectId: "credits-f2ca3",
+            storageBucket: "credits-f2ca3.firebasestorage.app",
+            messagingSenderId: "178991466300",
+            appId: "1:178991466300:web:962c6b299f5d4e56ef4039"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUserData = null;
+
+        // --- Управление UI ---
+        window.showScreen = (screenId) => {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            // Показываем хедер только если мы не на экране входа
+            if(screenId === 'auth-screen') {
+                document.getElementById('header').style.display = 'none';
+            } else {
+                document.getElementById('header').style.display = 'flex';
+            }
+        };
+
+        window.toggleLoading = (btnId, isLoading) => {
+            const btn = document.getElementById(btnId);
+            const text = btn.querySelector('.btn-text');
+            const loader = btn.querySelector('.loader');
+            
+            if (isLoading) {
+                text.classList.add('hidden');
+                loader.style.display = 'block';
+                btn.disabled = true;
+            } else {
+                text.classList.remove('hidden');
+                loader.style.display = 'none';
+                btn.disabled = false;
+            }
+        };
+
+        // --- Логика Аутентификации ---
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Пользователь вошел, грузим данные
+                const userRef = ref(db, 'users/' + user.uid);
+                get(userRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        currentUserData = snapshot.val();
+                        updateUI(user.email, currentUserData);
+                        showScreen('menu-screen');
+                    } else {
+                        // Если данных нет (ошибка регистрации), создаем базовые
+                         console.error("Данные пользователя не найдены");
+                    }
+                });
+            } else {
+                showScreen('auth-screen');
+                currentUserData = null;
+            }
+        });
+
+        window.handleRegister = async () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const errorP = document.getElementById('auth-error');
+            
+            if(pass.length < 6) { errorP.innerText = "Пароль должен быть 6+ символов"; return; }
+
+            // Находим кнопку регистрации (это вторая кнопка в блоке)
+            const regBtn = document.querySelectorAll('#auth-screen button')[1]; 
+            // Добавим ID для удобства в HTML выше, но здесь найдем так или через this если передать
+            // Для простоты используем визуальный эффект на кнопке Войти, так как у второй кнопки нет ID в коде выше
+            // Давай добавим ID кнопке регистрации в HTML? Я не могу менять HTML, поэтому использую querySelector
+            
+            errorP.innerText = "Регистрация...";
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                // --- ГЕНЕРАЦИЯ ID (ТРАНЗАКЦИЯ) ---
+                const counterRef = ref(db, 'meta/userCount');
+                
+                // Транзакция: читаем счетчик, увеличиваем, записываем
+                const result = await runTransaction(counterRef, (currentCount) => {
+                    if (currentCount === null) return 100000; // Первый юзер
+                    return currentCount + 1;
+                });
+
+                const newId = result.snapshot.val();
+
+                // Сохраняем данные юзера
+                await set(ref(db, 'users/' + user.uid), {
+                    email: email,
+                    balance: 50, // Стартовый бонус
+                    gameId: newId
+                });
+
+            } catch (error) {
+                errorP.innerText = error.message;
+            }
+        };
+
+        window.handleLogin = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const errorP = document.getElementById('auth-error');
+
+            window.toggleLoading('login-btn', true);
+
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch((error) => {
+                    errorP.innerText = "Ошибка: " + error.message;
+                    window.toggleLoading('login-btn', false);
+                });
+        };
+
+        window.handleLogout = () => {
+            signOut(auth);
+            closeProfile();
+        };
+
+        function updateUI(email, data) {
+            document.getElementById('header-balance').innerText = data.balance;
+            document.getElementById('profile-email').innerText = email;
+            document.getElementById('profile-balance').innerText = data.balance;
+            document.getElementById('profile-id').innerText = data.gameId || "Ошибка";
+        }
+
+        // --- Профиль ---
+        window.openProfile = () => { document.getElementById('profile-modal').style.display = 'flex'; };
+        window.closeProfile = () => { document.getElementById('profile-modal').style.display = 'none'; };
+
+        // --- Игры ---
+        window.openGame = (game) => {
+            if(game === 'coinflip') showScreen('coinflip-screen');
+        };
+
+        // --- Логика Игры "Монетка" ---
+        window.playCoinFlip = async () => {
+            const cost = 3;
+            const reward = 5;
+            const msg = document.getElementById('result-msg');
+            const visual = document.getElementById('coin-visual');
+
+            if (!currentUserData || currentUserData.balance < cost) {
+                msg.innerText = "Недостаточно тикетов!";
+                msg.style.color = "var(--danger)";
+                return;
+            }
+
+            // 1. Визуальная загрузка (Оплата)
+            window.toggleLoading('play-btn', true);
+            msg.innerText = "";
+            
+            // Имитация задержки сети/оплаты (1 секунда)
+            await new Promise(r => setTimeout(r, 1000));
+
+            // 2. Логика игры
+            const isWin = Math.random() < 0.5; // 50% шанс
+            
+            const userRef = ref(db, 'users/' + auth.currentUser.uid);
+
+            // Транзакция для безопасного изменения баланса
+            await runTransaction(userRef, (user) => {
+                if (user) {
+                    user.balance -= cost; // Снимаем оплату
+                    if (isWin) {
+                        user.balance += reward; // Начисляем выигрыш
+                    }
+                }
+                return user;
+            }).then((result) => {
+                // Обновляем локальные данные
+                currentUserData = result.snapshot.val();
+                updateUI(auth.currentUser.email, currentUserData);
+
+                // Анимация и результат
+                window.toggleLoading('play-btn', false);
+                
+                if (isWin) {
+                    visual.innerText = "🏆";
+                    msg.innerText = "ПОБЕДА! (+5 тикетов)";
+                    msg.style.color = "var(--success)";
+                } else {
+                    visual.innerText = "❌";
+                    msg.innerText = "Проигрыш...";
+                    msg.style.color = "var(--danger)";
+                }
+                
+                // Сброс иконки через время
+                setTimeout(() => visual.innerText = "$", 2000);
+            });
+        };
+
+    </script>
+</body>
+</html>
